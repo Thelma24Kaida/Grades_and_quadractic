@@ -1,0 +1,578 @@
+
+Quadratic Equation Solver and Grade Converter
+
+I'll create a clean, well-structured single-file web application following the suggested repository structure.
+
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quadratic Solver & Grade Converter</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: #333;
+            line-height: 1.6;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        header {
+            background: #2c3e50;
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+
+        h1 {
+            font-size: 2.2rem;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            margin-bottom: 15px;
+        }
+
+        .instructions {
+            background: #34495e;
+            padding: 15px;
+            border-radius: 5px;
+            font-size: 0.95rem;
+        }
+
+        .content {
+            padding: 30px;
+        }
+
+        .app-section {
+            margin-bottom: 40px;
+            padding: 25px;
+            border: 1px solid #e1e1e1;
+            border-radius: 8px;
+            background: #f8f9fa;
+        }
+
+        h2 {
+            color: #2c3e50;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid #3498db;
+        }
+
+        .input-group {
+            margin-bottom: 15px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: #2c3e50;
+        }
+
+        input {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 5px;
+            font-size: 1rem;
+            transition: border-color 0.3s;
+        }
+
+        input:focus {
+            border-color: #3498db;
+            outline: none;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 0.9rem;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            background: #3498db;
+            color: white;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: background 0.3s;
+            flex: 1;
+        }
+
+        button:hover {
+            background: #2980b9;
+        }
+
+        button.reset {
+            background: #e74c3c;
+        }
+
+        button.reset:hover {
+            background: #c0392b;
+        }
+
+        .result {
+            margin-top: 25px;
+            padding: 20px;
+            border-radius: 5px;
+            background: white;
+            border-left: 4px solid #3498db;
+            display: none;
+        }
+
+        .equation {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            background: #f8f9fa;
+            border-radius: 5px;
+        }
+
+        .grade-scale {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        .grade-scale th, .grade-scale td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+
+        .grade-scale th {
+            background: #2c3e50;
+            color: white;
+        }
+
+        .grade-scale tr:nth-child(even) {
+            background: #f2f2f2;
+        }
+
+        footer {
+            text-align: center;
+            padding: 20px;
+            background: #2c3e50;
+            color: white;
+            font-size: 0.9rem;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                border-radius: 0;
+            }
+            
+            h1 {
+                font-size: 1.8rem;
+            }
+            
+            .content {
+                padding: 20px;
+            }
+            
+            .button-group {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>Quadratic Equation Solver & Grade Converter</h1>
+            <p class="subtitle">ICT251 - Web Technologies Assignment</p>
+            <div class="instructions">
+                <p><strong>Instructions:</strong> Use the forms below to solve quadratic equations and convert numeric scores to letter grades.</p>
+            </div>
+        </header>
+        
+        <div class="content">
+            <!-- Quadratic Equation Solver Section -->
+            <section class="app-section">
+                <h2>Quadratic Equation Solver</h2>
+                <p>Solve equations of the form: <strong>ax² + bx + c = 0</strong></p>
+                
+                <div class="input-group">
+                    <label for="a">Coefficient a:</label>
+                    <input type="number" id="a" step="any" placeholder="Enter value for a">
+                    <div class="error-message" id="error-a"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="b">Coefficient b:</label>
+                    <input type="number" id="b" step="any" placeholder="Enter value for b">
+                    <div class="error-message" id="error-b"></div>
+                </div>
+                
+                <div class="input-group">
+                    <label for="c">Coefficient c:</label>
+                    <input type="number" id="c" step="any" placeholder="Enter value for c">
+                    <div class="error-message" id="error-c"></div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="solve-btn">Compute Solution</button>
+                    <button id="reset-quadratic" class="reset">Reset</button>
+                </div>
+                
+                <div id="quadratic-result" class="result">
+                    <h3>Solution:</h3>
+                    <div id="solution"></div>
+                </div>
+            </section>
+            
+            <!-- Grade Converter Section -->
+            <section class="app-section">
+                <h2>Grade Converter</h2>
+                <p>Convert numeric scores to letter grades using the scale below:</p>
+                
+                <div class="input-group">
+                    <label for="score">Numeric Score (0-100):</label>
+                    <input type="number" id="score" min="0" max="100" placeholder="Enter score (0-100)">
+                    <div class="error-message" id="error-score"></div>
+                </div>
+                
+                <div class="button-group">
+                    <button id="convert-btn">Compute Grade</button>
+                    <button id="reset-grade" class="reset">Reset</button>
+                </div>
+                
+                <div id="grade-result" class="result">
+                    <h3>Grade Result:</h3>
+                    <div id="grade-output"></div>
+                </div>
+                
+                <h3 style="margin-top: 20px;">Grade Scale</h3>
+                <table class="grade-scale">
+                    <thead>
+                        <tr>
+                            <th>Grade</th>
+                            <th>Range</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>A+</td>
+                            <td>85-100</td>
+                        </tr>
+                        <tr>
+                            <td>A</td>
+                            <td>75-84</td>
+                        </tr>
+                        <tr>
+                            <td>B+</td>
+                            <td>65-74</td>
+                        </tr>
+                        <tr>
+                            <td>B</td>
+                            <td>60-64</td>
+                        </tr>
+                        <tr>
+                            <td>C+</td>
+                            <td>55-59</td>
+                        </tr>
+                        <tr>
+                            <td>G</td>
+                            <td>50-54</td>
+                        </tr>
+                        <tr>
+                            <td>D</td>
+                            <td>0-49</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+        </div>
+        
+        <footer>
+            <p>ICT251 Web Technologies Assignment - Single-File Web App</p>
+        </footer>
+    </div>
+
+    <script>
+        // Quadratic Equation Solver
+        document.getElementById('solve-btn').addEventListener('click', function() {
+            // Get input values
+            const a = parseFloat(document.getElementById('a').value);
+            const b = parseFloat(document.getElementById('b').value);
+            const c = parseFloat(document.getElementById('c').value);
+            
+            // Get result elements
+            const resultDiv = document.getElementById('quadratic-result');
+            const solutionDiv = document.getElementById('solution');
+            
+            // Get error message elements
+            const errorA = document.getElementById('error-a');
+            const errorB = document.getElementById('error-b');
+            const errorC = document.getElementById('error-c');
+            
+            // Reset error messages
+            errorA.style.display = 'none';
+            errorB.style.display = 'none';
+            errorC.style.display = 'none';
+            
+            // Validate inputs
+            let isValid = true;
+            
+            if (isNaN(a)) {
+                errorA.textContent = 'Please enter a valid number for coefficient a.';
+                errorA.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isNaN(b)) {
+                errorB.textContent = 'Please enter a valid number for coefficient b.';
+                errorB.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (isNaN(c)) {
+                errorC.textContent = 'Please enter a valid number for coefficient c.';
+                errorC.style.display = 'block';
+                isValid = false;
+            }
+            
+            if (!isValid) {
+                resultDiv.style.display = 'none';
+                return;
+            }
+            
+            // Check if a is zero
+            if (a === 0) {
+                errorA.textContent = 'Coefficient a cannot be zero for a quadratic equation.';
+                errorA.style.display = 'block';
+                resultDiv.style.display = 'none';
+                return;
+            }
+            
+            // Calculate discriminant
+            const discriminant = b * b - 4 * a * c;
+            
+            // Display the equation
+            let equationHTML = `<div class="equation"><strong>Equation: `;
+            
+            // Format the equation nicely
+            if (a === 1) {
+                equationHTML += 'x²';
+            } else if (a === -1) {
+                equationHTML += '-x²';
+            } else {
+                equationHTML += `${a}x²`;
+            }
+            
+            if (b !== 0) {
+                if (b > 0) {
+                    equationHTML += ` + ${b}x`;
+                } else {
+                    equationHTML += ` - ${Math.abs(b)}x`;
+                }
+            }
+            
+            if (c !== 0) {
+                if (c > 0) {
+                    equationHTML += ` + ${c}`;
+                } else {
+                    equationHTML += ` - ${Math.abs(c)}`;
+                }
+            }
+            
+            equationHTML += ' = 0</strong></div>';
+            
+            // Calculate solutions based on discriminant
+            let solutionHTML = equationHTML;
+            solutionHTML += `<p><strong>Discriminant (D):</strong> D = b² - 4ac = ${discriminant}</p>`;
+            
+            if (discriminant > 0) {
+                const root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+                const root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+                
+                solutionHTML += `<p><strong>Nature of Roots:</strong> Two distinct real roots (D > 0)</p>`;
+                solutionHTML += `<p><strong>Solutions:</strong> x = ${root1.toFixed(4)} and x = ${root2.toFixed(4)}</p>`;
+            } else if (discriminant === 0) {
+                const root = -b / (2 * a);
+                
+                solutionHTML += `<p><strong>Nature of Roots:</strong> One real repeated root (D = 0)</p>`;
+                solutionHTML += `<p><strong>Solution:</strong> x = ${root.toFixed(4)}</p>`;
+            } else {
+                const realPart = -b / (2 * a);
+                const imaginaryPart = Math.sqrt(Math.abs(discriminant)) / (2 * a);
+                
+                solutionHTML += `<p><strong>Nature of Roots:</strong> Two complex conjugate roots (D < 0)</p>`;
+                solutionHTML += `<p><strong>Solutions:</strong> x = ${realPart.toFixed(4)} + ${imaginaryPart.toFixed(4)}i and x = ${realPart.toFixed(4)} - ${imaginaryPart.toFixed(4)}i</p>`;
+            }
+            
+            solutionDiv.innerHTML = solutionHTML;
+            resultDiv.style.display = 'block';
+        });
+        
+        // Grade Converter
+        document.getElementById('convert-btn').addEventListener('click', function() {
+            const score = parseInt(document.getElementById('score').value);
+            
+            const resultDiv = document.getElementById('grade-result');
+            const gradeOutput = document.getElementById('grade-output');
+            const errorScore = document.getElementById('error-score');
+            
+            // Reset error message
+            errorScore.style.display = 'none';
+            
+            // Validate input
+            if (isNaN(score) || score < 0 || score > 100) {
+                errorScore.textContent = 'Please enter a valid score between 0 and 100.';
+                errorScore.style.display = 'block';
+                resultDiv.style.display = 'none';
+                return;
+            }
+            
+            // Determine grade based on score
+            let grade;
+            if (score >= 85) {
+                grade = 'A+';
+            } else if (score >= 75) {
+                grade = 'A';
+            } else if (score >= 65) {
+                grade = 'B+';
+            } else if (score >= 60) {
+                grade = 'B';
+            } else if (score >= 55) {
+                grade = 'C+';
+            } else if (score >= 50) {
+                grade = 'G';
+            } else {
+                grade = 'D';
+            }
+            
+            gradeOutput.innerHTML = `<p style="font-size: 1.2rem; text-align: center; padding: 15px; background: #e8f5e9; border-radius: 5px;">
+                <strong>Score ${score} → Grade ${grade}</strong>
+            </p>`;
+            resultDiv.style.display = 'block';
+        });
+        
+        // Reset buttons
+        document.getElementById('reset-quadratic').addEventListener('click', function() {
+            document.getElementById('a').value = '';
+            document.getElementById('b').value = '';
+            document.getElementById('c').value = '';
+            document.getElementById('quadratic-result').style.display = 'none';
+            document.getElementById('error-a').style.display = 'none';
+            document.getElementById('error-b').style.display = 'none';
+            document.getElementById('error-c').style.display = 'none';
+        });
+        
+        document.getElementById('reset-grade').addEventListener('click', function() {
+            document.getElementById('score').value = '';
+            document.getElementById('grade-result').style.display = 'none';
+            document.getElementById('error-score').style.display = 'none';
+        });
+    </script>
+</body>
+</html>
+```
+
+README.md Content
+
+```markdown
+# Quadratic Equation Solver & Grade Converter
+
+A single-file web application for solving quadratic equations and converting numeric scores to letter grades.
+
+## Features
+
+- **Quadratic Equation Solver**: Solves equations of the form ax² + bx + c = 0
+  - Calculates discriminant
+  - Determines nature of roots (real, repeated, or complex)
+  - Shows step-by-step solutions
+  - Input validation with error messages
+
+- **Grade Converter**: Converts numeric scores (0-100) to letter grades
+  - Uses the specified grading scale
+  - Handles all edge cases correctly
+  - Input validation for score range
+
+## How to Run
+
+1. Download the `index.html` file
+2. Open it in any web browser by double-clicking the file
+3. The application will run offline without requiring any server
+
+## Test Cases
+
+### Quadratic Solver Test Cases:
+- a=1, b=-3, c=2 → Roots: x=2, x=1 (two distinct real roots)
+- a=1, b=2, c=1 → Root: x=-1 (one repeated real root)
+- a=1, b=0, c=1 → Complex roots
+
+### Grade Converter Test Cases:
+- Score 85 → Grade A+
+- Score 75 → Grade A
+- Score 65 → Grade B+
+- Score 60 → Grade B
+- Score 55 → Grade C+
+- Score 50 → Grade G
+- Score 49 → Grade D
+- Score 100 → Grade A+
+- Score 0 → Grade D
+
+## Repository Structure
+
+```
+
+ICS-Quadratic-Grader<Surname-Firstname>/
+├──index.html
+└──README.md
+
+```
+
+## Technologies Used
+
+- HTML5
+- CSS3
+- JavaScript (ES6)
+
+## Assignment Details
+
+This project was created for ICT251 - Web Technologies assignment requirements.
+```
+
+This implementation follows the exact structure requested:
+
+· It is clean, has an organized layout with clear sections
+· The top section has a title and instructions
+· There is a quadratic form with inputs, compute button, result area, and reset button(all styled)
+· A grading form with input, compute button, result area, and reset button(styled)
+· All functionality is in a single HTML file
+· Ready for GitHub publishing with the suggested repository structure
+  
